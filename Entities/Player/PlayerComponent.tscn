@@ -1,0 +1,102 @@
+[gd_scene load_steps=10 format=3 uid="uid://inkieu5uwp0x"]
+
+[ext_resource type="Script" path="res://Scripts/PlayerScript/PlayerInstanceGeneral.gd" id="1_856yl"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/p_movement_manager.gd" id="2_24w6v"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/player_camara_movement.gd" id="2_sm75g"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/c_headbob.gd" id="4_we0lm"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/player_camera_smoothing.gd" id="5_3c4ra"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/SoundRelated/player_footstep_manager.gd" id="6_c1lnx"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5qf8x"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5qp06"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_bup02"]
+radius = 0.4
+
+[node name="playerController" type="CharacterBody3D" node_paths=PackedStringArray("MovementManager", "WorldModel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.005)
+platform_on_leave = 2
+platform_floor_layers = 4294967041
+platform_wall_layers = 1
+script = ExtResource("1_856yl")
+MovementManager = NodePath("MovementManager")
+WorldModel = NodePath("WorldModel")
+
+[node name="MovementManager" type="Node3D" parent="." node_paths=PackedStringArray("Controller_Instance", "PlayerCamera", "HeadBobEffectNode", "PlayerCollision", "PlayerMesh", "StairsBelowRayCast3D", "StairsAheadRayCast3D", "CameraSmoothingModule", "MoveableHeadModule", "ShapeCast")]
+script = ExtResource("2_24w6v")
+SURF = false
+Controller_Instance = NodePath("..")
+PlayerCamera = NodePath("../HeadPivotOGPos/HeadPivot/CameraSmoothNode/Camera3D")
+HeadBobEffectNode = NodePath("../HeadPivotOGPos/HeadBob")
+PlayerCollision = NodePath("../CollisionShape3D")
+PlayerMesh = NodePath("../WorldModel/PlayerMesh")
+jump_velocity = 5.0
+sprint_speed = 9.0
+StairsBelowRayCast3D = NodePath("../StairsBelowRC3D")
+StairsAheadRayCast3D = NodePath("../StairsAheadRC3D")
+CameraSmoothingModule = NodePath("../HeadPivotOGPos/HeadPivot/CameraSmoothNode")
+MoveableHeadModule = NodePath("../HeadPivotOGPos/HeadPivot")
+ShapeCast = NodePath("../HeadPivotOGPos/HeadPivot/CameraSmoothNode/Camera3D/UseShapeCast")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_5qf8x")
+
+[node name="WorldModel" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="WorldModel"]
+mesh = SubResource("CapsuleMesh_5qp06")
+
+[node name="HeadPivotOGPos" type="Node3D" parent="." node_paths=PackedStringArray("PlayerController", "NeckPivot", "PlayerCamera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.784, 0)
+script = ExtResource("2_sm75g")
+PlayerController = NodePath("..")
+NeckPivot = NodePath(".")
+PlayerCamera = NodePath("HeadPivot/CameraSmoothNode/Camera3D")
+
+[node name="HeadBob" type="Node3D" parent="HeadPivotOGPos" node_paths=PackedStringArray("HeadPivot", "Camera")]
+unique_name_in_owner = true
+script = ExtResource("4_we0lm")
+HeadPivot = NodePath("..")
+Camera = NodePath("../HeadPivot/CameraSmoothNode/Camera3D")
+
+[node name="HeadPivot" type="Node3D" parent="HeadPivotOGPos"]
+unique_name_in_owner = true
+
+[node name="CameraSmoothNode" type="Node3D" parent="HeadPivotOGPos/HeadPivot" node_paths=PackedStringArray("SmoothCamera", "ControllerInstance")]
+unique_name_in_owner = true
+script = ExtResource("5_3c4ra")
+SmoothCamera = NodePath(".")
+ControllerInstance = NodePath("../../..")
+
+[node name="Camera3D" type="Camera3D" parent="HeadPivotOGPos/HeadPivot/CameraSmoothNode"]
+unique_name_in_owner = true
+cull_mask = 1048573
+
+[node name="UseShapeCast" type="ShapeCast3D" parent="HeadPivotOGPos/HeadPivot/CameraSmoothNode/Camera3D"]
+shape = SubResource("SphereShape3D_bup02")
+target_position = Vector3(0, 0, -2)
+max_results = 2
+collision_mask = 65535
+debug_shape_custom_color = Color(1, 0, 0, 1)
+
+[node name="StairsAheadRC3D" type="RayCast3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.479, -0.713)
+target_position = Vector3(0, -0.55, 0)
+
+[node name="StairsBelowRC3D" type="RayCast3D" parent="."]
+unique_name_in_owner = true
+target_position = Vector3(0, -0.75, 0)
+
+[node name="FootStepPlayer" type="AudioStreamPlayer3D" parent="." node_paths=PackedStringArray("snd_stream")]
+script = ExtResource("6_c1lnx")
+snd_stream = NodePath(".")
+
+[connection signal="movement_crouch" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_crouch"]
+[connection signal="movement_generic" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_generic"]
+[connection signal="movement_jump" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_jump"]
+[connection signal="movement_sprint" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_sprint"]
+[connection signal="movement_stopped" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_stopped"]

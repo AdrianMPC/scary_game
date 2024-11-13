@@ -1,0 +1,95 @@
+[gd_scene load_steps=14 format=3 uid="uid://cwfgvjbs1ojpm"]
+
+[ext_resource type="PackedScene" uid="uid://inkieu5uwp0x" path="res://Entities/Player/PlayerComponent.tscn" id="1_8vv7p"]
+[ext_resource type="Terrain3DTexture" uid="uid://l4bkvyur1p7h" path="res://Assets/Textures/Terrain3DTextures/grass_terrain.tres" id="2_1hx22"]
+[ext_resource type="Terrain3DTexture" uid="uid://xkmyr34v1vn7" path="res://Assets/Textures/Terrain3DTextures/ground_terrain.tres" id="3_gli27"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_hy8ry"]
+
+[sub_resource type="Sky" id="Sky_6gvf4"]
+sky_material = SubResource("PhysicalSkyMaterial_hy8ry")
+
+[sub_resource type="Environment" id="Environment_86mmm"]
+background_mode = 2
+sky = SubResource("Sky_6gvf4")
+tonemap_mode = 2
+glow_enabled = true
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 0.1142
+
+[sub_resource type="Gradient" id="Gradient_nbgra"]
+offsets = PackedFloat32Array(0.2, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ydvfd"]
+noise_type = 2
+frequency = 0.03
+cellular_jitter = 3.0
+cellular_return_type = 0
+domain_warp_enabled = true
+domain_warp_type = 1
+domain_warp_amplitude = 50.0
+domain_warp_fractal_type = 2
+domain_warp_fractal_lacunarity = 1.5
+domain_warp_fractal_gain = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h0hn7"]
+seamless = true
+color_ramp = SubResource("Gradient_nbgra")
+noise = SubResource("FastNoiseLite_ydvfd")
+
+[sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_yr77o"]
+_shader_parameters = {
+"blend_sharpness": 0.0,
+"height_blending": true,
+"macro_variation1": Color(1, 1, 1, 1),
+"macro_variation2": Color(1, 1, 1, 1),
+"noise1_angle": 0.0,
+"noise1_offset": Vector2(0.5, 0.5),
+"noise1_scale": 0.001,
+"noise2_scale": 0.076,
+"noise3_scale": 0.225,
+"noise_texture": SubResource("NoiseTexture2D_h0hn7"),
+"vertex_normals_distance": 128.0
+}
+world_background = 0
+texture_filtering = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ssaqo"]
+transparency = 4
+cull_mode = 2
+vertex_color_use_as_albedo = true
+backlight_enabled = true
+backlight = Color(0.5, 0.5, 0.5, 1)
+distance_fade_mode = 1
+distance_fade_min_distance = 960.0
+distance_fade_max_distance = 480.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_qjc1x"]
+height_offset = 0.5
+density = 10.0
+material_override = SubResource("StandardMaterial3D_ssaqo")
+generated_type = 1
+
+[sub_resource type="Terrain3DAssets" id="Terrain3DAssets_rxuhl"]
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_qjc1x")])
+texture_list = Array[Terrain3DTextureAsset]([ExtResource("2_1hx22"), ExtResource("3_gli27")])
+
+[node name="basic_world" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_86mmm")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="playerController" parent="." instance=ExtResource("1_8vv7p")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.8508, 3.03914, -0.005)
+
+[node name="Terrain3D" type="Terrain3D" parent="."]
+data_directory = "res://Assets/TerrainData"
+material = SubResource("Terrain3DMaterial_yr77o")
+assets = SubResource("Terrain3DAssets_rxuhl")
+top_level = true
+metadata/_edit_lock_ = true
