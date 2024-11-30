@@ -3,11 +3,8 @@ class_name CPlayerMovement
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity");
 
-signal movement_jump(sound_pack: MatSoundPack, p_speed: float);
-signal movement_generic(sound_pack: MatSoundPack, p_speed: float);
-signal movement_sprint(sound_pack: MatSoundPack, p_speed: float);
-signal movement_crouch(sound_pack: MatSoundPack, p_speed: float);
-signal movement_stopped;
+signal movement_jump(sound_pack: MatSoundPack);
+
 
 @export_category("MOVEMENT OPTIONS")
 @export var SURF: bool = true;
@@ -80,7 +77,7 @@ func _main_movement_process(delta: float) -> void:
 			if Controller_Instance.is_on_floor() or _snapped_to_stairs_last_frame:
 				if Input.is_action_just_pressed("jump") or (AUTO_BHOP and Input.is_action_pressed("jump")):
 					var snd_pack : MatSoundPack = _get_3d_texture();
-					emit_signal(&'movement_jump', snd_pack, Controller_Instance.velocity.length());
+					emit_signal(&'movement_jump', snd_pack);
 					var normal: Vector3 = Controller_Instance.get_floor_normal()
 					Controller_Instance.velocity.y = jump_velocity * normal.y;
 					#Controller_Instance.velocity.x += normal.x * jump_velocity;
@@ -129,21 +126,9 @@ func _handle_ground_physics(delta) -> void:
 	if curr_length > 0.0:
 		new_speed /= curr_length
 	Controller_Instance.velocity *= new_speed;
-	#_send_bob_effect(delta);
-	var speed: float  = Controller_Instance.velocity.length();
 	var snd_pack : MatSoundPack = _get_3d_texture();
-	var class_txt: String;
+	HeadBobEffectNode.headbobProcess(delta, Controller_Instance.velocity.length(), snd_pack);
 	
-	if speed == 0.0:
-		class_txt = &'movement_stopped'
-		emit_signal(class_txt)
-	elif speed < sprint_speed - 1: 
-		class_txt = &'movement_generic'
-		emit_signal(class_txt, snd_pack, speed)
-	else: 	
-		class_txt = &'movement_sprint'
-		emit_signal(class_txt, snd_pack, speed)
-		
 	
 # Allow sliding
 func _clip_velocity(normal: Vector3, overbounce: float, _delta: float):
@@ -246,6 +231,7 @@ func _handle_crouch(delta: float) -> void:
 	PlayerMesh.position.y = PlayerCollision.position.y;
 	PlayerMesh.position.y = PlayerCollision.shape.height - 0.302;
 	PlayerMesh.position.y = PlayerCollision.shape.height - 0.9;
+
 
 func _handle_ladder() -> bool:
 	var was_climbing_ladder := _cur_ladder_climbing and _cur_ladder_climbing.overlaps_body(Controller_Instance)
@@ -372,9 +358,7 @@ func get_usable_component_at_shapecast() -> CUsableComponent:
 			return ShapeCast.get_collider(i).get_node_or_null("CUsableComponent");
 	return null;
 
-func _send_bob_effect(delta) -> void:
-	headbob_time += delta * Controller_Instance.velocity.length();
-	HeadBobEffectNode.headbobProcess(headbob_time);
+	
 
 func _get_move_speed() -> float:
 	if is_crouch:

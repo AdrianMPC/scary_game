@@ -31,8 +31,6 @@ PlayerCamera = NodePath("../HeadPivotOGPos/HeadPivot/CameraSmoothNode/Camera3D")
 HeadBobEffectNode = NodePath("../HeadPivotOGPos/HeadBob")
 PlayerCollision = NodePath("../CollisionShape3D")
 PlayerMesh = NodePath("../WorldModel/PlayerMesh")
-jump_velocity = 5.0
-sprint_speed = 9.0
 StairsBelowRayCast3D = NodePath("../StairsBelowRC3D")
 StairsAheadRayCast3D = NodePath("../StairsAheadRC3D")
 CameraSmoothingModule = NodePath("../HeadPivotOGPos/HeadPivot/CameraSmoothNode")
@@ -59,7 +57,7 @@ PlayerCamera = NodePath("HeadPivot/CameraSmoothNode/Camera3D")
 [node name="HeadBob" type="Node3D" parent="HeadPivotOGPos" node_paths=PackedStringArray("HeadPivot", "Camera")]
 unique_name_in_owner = true
 script = ExtResource("4_we0lm")
-HeadPivot = NodePath("..")
+HeadPivot = NodePath("../HeadPivot")
 Camera = NodePath("../HeadPivot/CameraSmoothNode/Camera3D")
 
 [node name="HeadPivot" type="Node3D" parent="HeadPivotOGPos"]
@@ -95,8 +93,7 @@ target_position = Vector3(0, -0.75, 0)
 script = ExtResource("6_c1lnx")
 snd_stream = NodePath(".")
 
-[connection signal="movement_crouch" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_crouch"]
-[connection signal="movement_generic" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_generic"]
+[node name="FootStepPos" type="Node3D" parent="."]
+
 [connection signal="movement_jump" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_jump"]
-[connection signal="movement_sprint" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_sprint"]
-[connection signal="movement_stopped" from="MovementManager" to="FootStepPlayer" method="_on_movement_manager_movement_stopped"]
+[connection signal="movement_step" from="HeadPivotOGPos/HeadBob" to="FootStepPlayer" method="_on_head_bob_movement_step"]
