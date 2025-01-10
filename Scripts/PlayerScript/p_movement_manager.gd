@@ -92,6 +92,7 @@ func _main_movement_process(delta: float) -> void:
 			_snap_down_to_stairs_check()
 	CameraSmoothingModule._slide_camera_smooth_back_to_origin(delta, walk_speed);
 	
+	
 func _handle_air_physics(delta) -> void:
 	Controller_Instance.velocity.y -= gravity * delta
 	var cur_speed_in_wish_dir = Controller_Instance.velocity.dot(wish_dir)
@@ -289,32 +290,42 @@ func _handle_ladder() -> bool:
 	
 func _get_3d_texture() -> MatSoundPack:
 	if !StairsBelowRayCast3D.is_colliding():
-		return
-		
-	var object = StairsBelowRayCast3D.get_collider()
-	var snd_pack;
-	if object.get_class() == &'Terrain3D':
-		var terrain : Terrain3D = object;
-		var txt_id = terrain.data.get_texture_id(Controller_Instance.global_position);
-		var txt : Terrain3DTextureAsset = terrain.assets.get_texture(txt_id.x)
-		
-		if !txt.has_meta(&'step_snd'):
-			return null;
-		
-		snd_pack = txt.get_meta(&'step_snd')
-	else:
-		var body : CollisionObject3D = StairsBelowRayCast3D.get_collider()
-		var shapeidx : int = StairsBelowRayCast3D.get_collider_shape()
-		var shape : CollisionShape3D = body.shape_owner_get_owner(shapeidx)
-		
-		if !shape.has_meta(&'step_snd'):
-			return null;
-		
-		snd_pack = shape.get_meta(&'step_snd')
-		
-	return snd_pack if snd_pack is MatSoundPack else null
-
+		return null 
 	
+	var collider = StairsBelowRayCast3D.get_collider()
+	var sound_pack = null
+
+	if collider.get_class() == "Terrain3D":
+		var terrain: Terrain3D = collider
+		var texture_id = terrain.data.get_texture_id(Controller_Instance.global_position)
+
+		if texture_id.x == NAN:
+			return null
+			
+		var base_texture: Terrain3DTextureAsset = terrain.assets.get_texture(texture_id.x)
+		var overlay_texture: Terrain3DTextureAsset = terrain.assets.get_texture(texture_id.y) if texture_id.y != NAN else null
+		var blend_value = texture_id.z
+		
+		if blend_value < 0.3 and base_texture.has_meta("step_snd"):
+			sound_pack = base_texture.get_meta("step_snd")
+		elif blend_value >= 0.3 and blend_value <= 0.7 and overlay_texture and overlay_texture.has_meta("step_snd"):
+			sound_pack = overlay_texture.get_meta("step_snd")
+		else:
+			sound_pack = base_texture.get_meta("step_snd") if base_texture.has_meta("step_snd") else null
+
+	else:
+		var body: CollisionObject3D = collider
+		var shape_idx: int = StairsBelowRayCast3D.get_collider_shape()
+		var shape: CollisionShape3D = body.shape_owner_get_owner(shape_idx)
+		
+		if shape.has_meta("step_snd"):
+			sound_pack = shape.get_meta("step_snd")
+			
+	if sound_pack == null:
+		print("No se encontró un sonido válido para este terreno u objeto.")
+		
+	return sound_pack if sound_pack is MatSoundPack else null
+
 func handle_noclip(delta) -> bool:
 	var _speed = 2.0;
 	if Input.is_action_just_pressed("noclip"):

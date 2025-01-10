@@ -1,0 +1,22 @@
+[gd_resource type="Terrain3DTexture" load_steps=10 format=3 uid="uid://bcwra3ydt2io7"]
+
+[ext_resource type="Texture2D" path="res://Assets/Textures/GrassTerrain/Grass004_1k_alb_ht.dds" id="1_62hm8"]
+[ext_resource type="AudioStream" uid="uid://drfrk4d1ypnqw" path="res://Assets/Sounds/Footsteps/grass_jump.wav" id="2_3qrom"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/SoundRelated/sound_pack.gd" id="3_7xq6k"]
+[ext_resource type="AudioStream" uid="uid://cf388ryh17mqc" path="res://Assets/Sounds/Footsteps/grass_walk1.wav" id="4_bhyp2"]
+[ext_resource type="AudioStream" uid="uid://cis3l7epygcel" path="res://Assets/Sounds/Footsteps/grass_walk2.wav" id="5_u12g8"]
+[ext_resource type="AudioStream" uid="uid://m4wimddst8fj" path="res://Assets/Sounds/Footsteps/grass_walk3.wav" id="6_btm54"]
+[ext_resource type="AudioStream" uid="uid://bvtwpxwwiegbg" path="res://Assets/Sounds/Footsteps/grass_walk4.wav" id="7_5w0co"]
+[ext_resource type="Texture2D" uid="uid://cxiop8x0gxqud" path="res://Assets/Textures/GrassTerrain/Grass004_nrm_rgh.png" id="8_x836j"]
+
+[sub_resource type="Resource" id="Resource_trpf1"]
+script = ExtResource("3_7xq6k")
+walk_footsteps = Array[AudioStream]([ExtResource("4_bhyp2"), ExtResource("5_u12g8"), ExtResource("6_btm54"), ExtResource("7_5w0co")])
+jump = ExtResource("2_3qrom")
+
+[resource]
+name = "Grass004_1k_alb_ht"
+albedo_texture = ExtResource("1_62hm8")
+normal_texture = ExtResource("8_x836j")
+uv_scale = 0.01
+metadata/step_snd = SubResource("Resource_trpf1")

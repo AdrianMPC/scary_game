@@ -1,0 +1,23 @@
+[gd_resource type="Terrain3DTexture" load_steps=10 format=3 uid="uid://cfytdbx6qwhvl"]
+
+[ext_resource type="Texture2D" path="res://Assets/Textures/GroundTerrain/Ground067_1K.dds" id="1_6xbav"]
+[ext_resource type="AudioStream" uid="uid://diqpu1ng1v10e" path="res://Assets/Sounds/Footsteps/ground_jump.wav" id="2_m0lyg"]
+[ext_resource type="Script" path="res://Scripts/PlayerScript/SoundRelated/sound_pack.gd" id="3_uyr3n"]
+[ext_resource type="AudioStream" uid="uid://bmhpmuq8th843" path="res://Assets/Sounds/Footsteps/ground_walk1.wav" id="4_wxpdn"]
+[ext_resource type="AudioStream" uid="uid://c2ia23skbfakg" path="res://Assets/Sounds/Footsteps/ground_walk2.wav" id="5_ggeai"]
+[ext_resource type="AudioStream" uid="uid://w33rh71pveuj" path="res://Assets/Sounds/Footsteps/ground_walk3.wav" id="6_cg7q7"]
+[ext_resource type="AudioStream" uid="uid://dpxlgrvpd7wfe" path="res://Assets/Sounds/Footsteps/ground_walk4.wav" id="7_w7slj"]
+[ext_resource type="Texture2D" path="res://Assets/Textures/GroundTerrain/Ground067_normal_1K.dds" id="8_3x0km"]
+
+[sub_resource type="Resource" id="Resource_in1e6"]
+script = ExtResource("3_uyr3n")
+walk_footsteps = Array[AudioStream]([ExtResource("4_wxpdn"), ExtResource("5_ggeai"), ExtResource("6_cg7q7"), ExtResource("7_w7slj")])
+jump = ExtResource("2_m0lyg")
+
+[resource]
+name = "Ground067_1K"
+id = 1
+albedo_texture = ExtResource("1_6xbav")
+normal_texture = ExtResource("8_3x0km")
+uv_scale = 0.01
+metadata/step_snd = SubResource("Resource_in1e6")

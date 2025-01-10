@@ -24,7 +24,7 @@ func headbobProcess(delta: float, speed: float, snd_pack: MatSoundPack) -> void:
 	
 	if pos < pos_threshold and can_play:
 		can_play = false  
-		emit_signal('movement_step', snd_pack)
+		emit_signal(&'movement_step', snd_pack)
   
 	if pos > 0:
 		can_play = true

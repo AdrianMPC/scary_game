@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cv1vvjxw36mku"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2f5v4"]
+albedo_color = Color(0.457584, 0.287471, 2.40654e-07, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vkvcx"]
+material = SubResource("StandardMaterial3D_2f5v4")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_wgbpo"]
+
+[node name="Tree" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1.93622, 0, 0, 0, 1, 0, 1.73609, 0)
+
+[node name="TreeModel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 2.16827, 0, 0, 0, 1, 0, 1.31965, 0)
+mesh = SubResource("CylinderMesh_vkvcx")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TreeModel"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreeModel/StaticBody3D"]
+shape = SubResource("CylinderShape3D_wgbpo")
+
+[node name="PosNode_3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.044, -0.86, -0.983)
+
+[node name="PosNode_2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.996, -0.86, -0.983)
+
+[node name="PosNode_4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.008, -0.86, 1.033)
+
+[node name="PosNode_1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.002, -0.86, 1.001)

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbdnv5kxi6c0o"]
+
+[ext_resource type="PackedScene" uid="uid://bckoncqowfqbe" path="res://Assets/Models/capsule_winky.glb" id="1_qf8oy"]
+
+[node name="EvilMonster" type="Node3D"]
+
+[node name="capsule_winky" parent="." instance=ExtResource("1_qf8oy")]
+transform = Transform3D(0.720982, 0, 0, 0, 0.720982, 0, 0, 0, 0.720982, 0, 0, 0)

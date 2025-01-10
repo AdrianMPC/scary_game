@@ -1,20 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=9 format=3 uid="uid://cwf7mp6ijtmk4"]
-
-[ext_resource type="Texture2D" uid="uid://bwmcxgvmf6t4f" path="res://Assets/Textures/Material/grass.jpg" id="1_dmqxj"]
-[ext_resource type="AudioStream" uid="uid://bkgdf24svybog" path="res://Assets/Sounds/Footsteps/grass_jump.ogg" id="2_b4573"]
-[ext_resource type="Script" path="res://Scripts/PlayerScript/SoundRelated/sound_pack.gd" id="2_st5sk"]
-[ext_resource type="AudioStream" uid="uid://cwis88yfqtqy1" path="res://Assets/Sounds/Footsteps/grass_walk1.ogg" id="4_lwuel"]
-[ext_resource type="AudioStream" uid="uid://cnn28drgquvyp" path="res://Assets/Sounds/Footsteps/grass_walk2.ogg" id="5_wlx3k"]
-[ext_resource type="AudioStream" uid="uid://d06dc5b82fbtx" path="res://Assets/Sounds/Footsteps/grass_walk3.ogg" id="6_kss8u"]
-[ext_resource type="AudioStream" uid="uid://dhgbhulo4tuvl" path="res://Assets/Sounds/Footsteps/grass_walk4.ogg" id="7_l2l48"]
-
-[sub_resource type="Resource" id="Resource_yi5b7"]
-script = ExtResource("2_st5sk")
-walk_footsteps = Array[AudioStream]([ExtResource("4_lwuel"), ExtResource("5_wlx3k"), ExtResource("6_kss8u"), ExtResource("7_l2l48")])
-jump = ExtResource("2_b4573")
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cj1b0oq1eey44"]
 
 [resource]
-albedo_color = Color(0.0466415, 0.291928, 0, 1)
-albedo_texture = ExtResource("1_dmqxj")
-uv1_scale = Vector3(1000, 1000, 1000)
-metadata/mat_pack = SubResource("Resource_yi5b7")
+roughness = 0.0
